@@ -18,11 +18,18 @@ Compilateur     : Mingw-w64 g++ 11.2.0
 
 using namespace std;
 
+enum class Player {
+    YELLOW,
+    RED,
+};
+
+string getPlayerColorCoin(Player player);
+
 void displayGameRules();
 
 void startGame();
 
-void displayBoard();
+void displayBoard(vector<vector<char>> &);
 
 int main() {
 
@@ -59,7 +66,10 @@ void startGame() {
 
     //Clear the console and display the board
     system("cls");
-    displayBoard();
+
+    vector<vector<char>> board (6, vector<char>(7, (char)Player::RED));
+
+    displayBoard(board);
 }
 
 /**
@@ -67,11 +77,27 @@ void startGame() {
  * @param board
  */
 void displayBoard(vector<vector<char>> &board) {
-    string charToDisplay = "";
-
+    cout << setw(board.size()*3) << setfill('-') << "" << endl;
     for(int row = 0; row < board.size(); row++){
         for(int col = 0; col < board[row].size(); col++){
-
+            cout << setw(3) << setfill(' ') << getPlayerColorCoin((Player) board[row][col]) ;
         }
+        cout << endl << setw(board.size()*3) << setfill('-') << "" << endl;
     }
+}
+
+string getPlayerColorCoin(Player player){
+    string playerCoin;
+    switch (player) {
+        case Player::YELLOW:
+            playerCoin = "\x1b[93m * \x1b[0m";
+            break;
+        case Player::RED:
+            playerCoin = "\x1b[91m * \x1b[0m";
+            break;
+        default:
+            playerCoin = "*";
+            break;
+    }
+    return playerCoin;
 }

@@ -31,6 +31,10 @@ void startGame();
 
 void displayBoard(vector<vector<char>> &);
 
+bool isWinner(vector<vector<char>> &);
+
+int getPlayerInput(int);
+
 int main() {
 
     displayGameRules();
@@ -67,12 +71,18 @@ void startGame() {
     //Clear the console and display the board
     system("cls");
 
-    vector<vector<char>> board (6, vector<char>(7, (char)Player::RED));
+    vector<vector<char>> board (6, vector<char>(7,' '));
 
-    displayBoard(board);
+    while(!isWinner(board)) {
+        displayBoard(board);
+        int input = getPlayerInput(board[0].size());
+        cout << input;
+
+    }
 }
 
 /**
+ *
  *
  * @param board
  */
@@ -100,4 +110,19 @@ string getPlayerColorCoin(Player player){
             break;
     }
     return playerCoin;
+}
+
+bool isWinner(vector<vector<char>> &board){
+    return false;
+}
+
+int getPlayerInput(int maxInputValue){
+    char input;
+
+    do {
+        cout << "Entrez un chiffre entre 1 et " << maxInputValue;
+        cin >> input;
+    } while (!isdigit(input));
+
+    return (int) input;
 }

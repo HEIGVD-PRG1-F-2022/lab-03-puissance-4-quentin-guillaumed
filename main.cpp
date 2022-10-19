@@ -35,6 +35,8 @@ bool isWinner(vector<vector<char>> &);
 
 int getPlayerInput(int);
 
+int getAvailableColSpace(vector<vector<char>> &board, int col);
+
 int main() {
 
     displayGameRules();
@@ -71,12 +73,18 @@ void startGame() {
     //Clear the console and display the board
     system("cls");
 
-    vector<vector<char>> board (6, vector<char>(7,' '));
+    vector<vector<char>> board(6, vector<char>(7, ' '));
 
-    while(!isWinner(board)) {
+    while (!isWinner(board)) {
         displayBoard(board);
-        int input = getPlayerInput(board[0].size());
-        cout << input;
+        int col;
+        int availableCase = -1;
+        do {
+            col = getPlayerInput(board[0].size());
+            availableCase = getAvailableColSpace(board, col);
+        } while (availableCase == -1);
+
+        board[availableCase][col-1] = (int) Player::RED;
     }
 }
 
@@ -86,16 +94,16 @@ void startGame() {
  * @param board
  */
 void displayBoard(vector<vector<char>> &board) {
-    cout << setw(board.size()*3) << setfill('-') << "" << endl;
-    for(int row = 0; row < board.size(); row++){
-        for(int col = 0; col < board[row].size(); col++){
-            cout << setw(3) << setfill(' ') << getPlayerColorCoin((Player) board[row][col]) ;
+    cout << setw(board.size() * 3) << setfill('-') << "" << endl;
+    for (int row = 0; row < board.size(); row++) {
+        for (int col = 0; col < board[row].size(); col++) {
+            cout << setw(3) << setfill(' ') << getPlayerColorCoin((Player) board[row][col]);
         }
-        cout << endl << setw(board.size()*3) << setfill('-') << "" << endl;
+        cout << endl << setw(board.size() * 3) << setfill('-') << "" << endl;
     }
 }
 
-string getPlayerColorCoin(Player player){
+string getPlayerColorCoin(Player player) {
     string playerCoin;
     switch (player) {
         case Player::YELLOW:
@@ -105,17 +113,17 @@ string getPlayerColorCoin(Player player){
             playerCoin = "\x1b[91m * \x1b[0m";
             break;
         default:
-            playerCoin = "*";
+            playerCoin = " ";
             break;
     }
     return playerCoin;
 }
 
-bool isWinner(vector<vector<char>> &board){
+bool isWinner(vector<vector<char>> &board) {
     return false;
 }
 
-int getPlayerInput(int maxInputValue){
+int getPlayerInput(int maxInputValue) {
     int input;
 
     do {
@@ -123,4 +131,11 @@ int getPlayerInput(int maxInputValue){
         cin >> input;
     } while (input > maxInputValue || input < 1);
     return input;
+}
+
+int getAvailableColSpace(vector<vector<char>> &board, int col) {
+    for (int x = board.size() - 1; x >= 0; x--) {
+        if(board[x][col-1] == ' ') return x;
+    }
+    return -1;
 }

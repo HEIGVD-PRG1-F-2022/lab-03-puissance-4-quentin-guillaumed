@@ -77,7 +77,6 @@ void startGame() {
         displayBoard(board);
         int input = getPlayerInput(board[0].size());
         cout << input;
-
     }
 }
 
@@ -117,12 +116,11 @@ bool isWinner(vector<vector<char>> &board){
 }
 
 int getPlayerInput(int maxInputValue){
-    char input;
+    int input;
 
     do {
-        cout << "Entrez un chiffre entre 1 et " << maxInputValue;
+        cout << "Entrez un chiffre entre 1 et " << maxInputValue << endl << "> ";
         cin >> input;
-    } while (!isdigit(input));
-
-    return (int) input;
+    } while (input > maxInputValue || input < 1);
+    return input;
 }

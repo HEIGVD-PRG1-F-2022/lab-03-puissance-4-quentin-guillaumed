@@ -35,7 +35,9 @@ bool isWinner(vector<vector<char>> &);
 
 int getPlayerInput(int, Player);
 
-int getAvailableColSpace(vector<vector<char>> &board, int col);
+int getAvailableColSpace(vector<vector<char>> &, int);
+
+bool checkVictory(vector<vector<char>>, int, int);
 
 int main() {
 
@@ -148,4 +150,28 @@ int getAvailableColSpace(vector<vector<char>> &board, int col) {
         if (board[x][col - 1] == ' ') return x;
     }
     return -1;
+}
+
+bool checkVictory(vector<vector<char>> &board, int x, int y){
+    //Check the column
+    int counter = 1;
+    for(int i = 0; i < 4; i++)
+    {
+        //Si l'index est en-dehors du tableau
+        if(y+i >= board.size()){
+            break;
+        }
+
+        if(board[y+i][x] == board[y+i+1][x])
+        {
+            counter++;
+        }
+
+        if (counter == 4)
+        {
+            return true;
+        }
+    }
+
+    counter = 0;
 }

@@ -31,13 +31,11 @@ void startGame();
 
 void displayBoard(vector<vector<char>> &);
 
-bool isWinner(vector<vector<char>> &);
-
 int getPlayerInput(int, Player);
 
 int getAvailableColSpace(vector<vector<char>> &, int);
 
-bool checkVictory(vector<vector<char>>, int, int);
+bool checkVictory(vector<vector<char>> &, int, int);
 
 int main() {
 
@@ -78,12 +76,13 @@ void startGame() {
     system("cls");
 
     vector<vector<char>> board(6, vector<char>(7, ' '));
+    int col;
+    int availableCase = -1;
 
-    while (!isWinner(board)) {
+    do {
         Player player = currentPlayer ? Player::RED : Player::YELLOW;
         displayBoard(board);
-        int col;
-        int availableCase = -1;
+
         do {
             col = getPlayerInput(board[0].size(), player);
             availableCase = getAvailableColSpace(board, col);
@@ -92,7 +91,7 @@ void startGame() {
         board[availableCase][col - 1] = (int) player;
 
         currentPlayer = !currentPlayer;
-    }
+    } while (!checkVictory(board, availableCase, col - 1));
 }
 
 /**
@@ -132,10 +131,6 @@ string getPlayerColorCoin(Player player) {
     return playerCoin;
 }
 
-bool isWinner(vector<vector<char>> &board) {
-    return false;
-}
-
 int getPlayerInput(int maxInputValue, Player player) {
     int input;
     do {
@@ -152,26 +147,102 @@ int getAvailableColSpace(vector<vector<char>> &board, int col) {
     return -1;
 }
 
-bool checkVictory(vector<vector<char>> &board, int x, int y){
+bool checkVictory(vector<vector<char>> &board, int x, int y) {
     //Check the column
     int counter = 1;
-    for(int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         //Si l'index est en-dehors du tableau
-        if(y+i >= board.size()){
+        if (x + i + 1 >= board.size()) {
             break;
         }
 
-        if(board[y+i][x] == board[y+i+1][x])
-        {
+        if (board[x + i][y] == board[x + i + 1][y]) {
             counter++;
         }
 
-        if (counter == 4)
-        {
+        if (counter >= 4) {
+            return true;
+        }
+
+    }
+
+    //Check the row
+    counter = 1;
+    // Exit flag to stop a side when there isn't a series of coin
+    bool f1 = true, f2 = true;
+
+    for (int i = 0; i < 4; i++) {
+        //Si l'index est en-dehors du tableau
+        if (x + i + 1 >= board[0].size() && x - i - 1 < 0) {
+            break;
+        }
+
+        // Check right
+        if (board[x][y + i] == board[x][y + i + 1] && f1) {
+            counter++;
+        } else {
+            f1 = false;
+        }
+
+        //Check left
+        if (board[x][y - i] == board[x][y - i - 1] && f2) {
+            counter++;
+        } else {
+            f2 = false;
+        }
+
+        if (!f1 && !f2) break;
+
+        if (counter >= 4) {
             return true;
         }
     }
 
-    counter = 0;
+    //Check the diag / and \
+    counter = 1;
+    f1 = true, f2 = true;
+    bool f3 = true, f4 = true;
+
+    for (int i = 0; i < 4; i++) {
+        //Si l'index est en-dehors du tableau
+        if (y - i < 0) {
+            f2 = false;
+            f3 = false;
+        }
+        // Check diag / up
+        if (board[x + i][y + i] == board[x + i + 1][y + i + 1] && f1) {
+            counter++;
+        } else {
+            f1 = false;
+        }
+
+        //Check diag / down
+        if (board[x - i][y - i] == board[x - i - 1][y - i - 1] && f2) {
+            counter++;
+        } else {
+            f2 = false;
+        }
+
+        // Check diag \ up
+        if (board[x + i][y - i] == board[x + i + 1][y - i - 1] && f3) {
+            counter++;
+        } else {
+            f3 = false;
+        }
+
+        //Check diag \ down
+        if (board[x - i][y + i] == board[x - i - 1][y + i + 1] && f4) {
+            counter++;
+        } else {
+            f4 = false;
+        }
+
+        if ((!f1 && !f2) || (!f3 && !f4)) break;
+
+        if (counter >= 4) {
+            return true;
+        }
+    }
+
+    return false;
 }

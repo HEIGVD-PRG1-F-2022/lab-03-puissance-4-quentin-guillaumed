@@ -98,12 +98,19 @@ void startGame() {
  * @param board
  */
 void displayBoard(vector<vector<char>> &board) {
-    cout << setw(board.size() * 4 + 1) << setfill('-') << "" << endl;
+
+    const int boardWidth = (board.size() + 1) * 4 + 1;
+
+    cout << setw(boardWidth) << setfill('-') << "" << endl;
     for (int row = 0; row < board.size(); row++) {
         for (int col = 0; col < board[row].size(); col++) {
             cout << "|" << setw(3) << setfill(' ') << getPlayerColorCoin((Player) board[row][col]);
+
+            if (col == (board[row].size() - 1)) {
+                cout << "|";
+            }
         }
-        cout << endl << setw(board.size() * 4 + 1) << setfill('-') << "" << endl;
+        cout << endl << setw(boardWidth) << setfill('-') << "" << endl;
     }
 }
 

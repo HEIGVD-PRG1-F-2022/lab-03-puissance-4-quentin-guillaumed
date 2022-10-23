@@ -17,6 +17,7 @@ Compilateur     : Mingw-w64 g++ 11.2.0
 
 #include <vector>
 #include <string>
+#include "player.h"
 
 const std::vector<std::string> RULES = {
         "Le but du jeu est d'aligner une suite de 4 pions de meme couleur sur une grille comptant 6 rangees et 7 colonnes.",
@@ -42,5 +43,12 @@ void displayGameBoardHeader(std::vector<std::vector<char>> &gameBoard);
  * @param gameBoard reference of the game 2D vector array
  */
 void displayGameBoard(std::vector<std::vector<char>> &gameBoard);
+
+/**
+ * Display a message to congratulate the winner
+ * @param player player that won the game
+ */
+void displayWinner(Player player);
+
 
 #endif //CONNECT4_DISPLAY_H

@@ -61,3 +61,21 @@ void displayGameBoard(std::vector<std::vector<char>> &gameBoard) {
              << setw(gameBoardSeparatorWidth) << setfill('-') << "" << endl;
     }
 }
+
+void displayWinner(Player player) {
+
+    //Get the player to display
+    string strPLayer;
+    if (player == Player::YELLOW) {
+        strPLayer = "jaune";
+    } else if (player == Player::RED) {
+        strPLayer = "rouge";
+    } else {
+        strPLayer = "";
+    }
+
+    //Dispay the message
+    if (strPLayer != "") {
+        cout << "Le joueur " << strPLayer << " a gagne. Felicitation!";
+    }
+}

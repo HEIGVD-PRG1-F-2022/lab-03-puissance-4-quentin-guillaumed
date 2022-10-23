@@ -52,7 +52,9 @@ void startGame() {
         currentPlayerFlag = !currentPlayerFlag;
     } while (!checkVictory(board, availableCase, col - 1));
 
+    //Display the final board and the winner
     displayGameBoard(board);
+    displayWinner(player);
 }
 
 int availableColSpace(vector<vector<char>> &gameBoard, int col) {

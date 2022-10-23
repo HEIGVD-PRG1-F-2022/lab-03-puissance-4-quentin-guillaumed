@@ -62,7 +62,7 @@ int availableColSpace(vector<vector<char>> &gameBoard, int col) {
 }
 
 bool checkVictory(vector<vector<char>> &board, int x, int y) {
-    // Check the column
+    /** Check the column**/
     int counter = 1;
     for (int i = 0; i < 4; i++) {
         // Si l'index est en-dehors du tableau
@@ -81,7 +81,7 @@ bool checkVictory(vector<vector<char>> &board, int x, int y) {
         }
     }
 
-    // Check the row
+    /** Check the rows **/
     counter = 1;
     // Exit flag to stop a side when there isn't a series of coin
     bool f1 = true, f2 = true;
@@ -114,28 +114,33 @@ bool checkVictory(vector<vector<char>> &board, int x, int y) {
         }
     }
 
-    //Check the diag / and \
+    /** Check the diag / and \ **/
     counter = 1;
+    int counter2 = 1;
+
     f1 = true, f2 = true;
     bool f3 = true, f4 = true;
 
     for (int i = 0; i < 4; i++) {
-        // Si l'index est en-dehors du tableau
+        // Si l'index est en-dehors du tableau à gauche
         if (y - i - 1 < 0) {
             f2 = false;
             f3 = false;
         }
 
+        // Si l'index est en-dehors du tableau à droite
         if (y + i + 1 > board[i].size() - 1) {
             f1 = false;
             f4 = false;
         }
 
+        // Si l'index est en-dehors du tableau en-haut
         if (x + i + 1 > board.size() - 1) {
             f2 = false;
             f4 = false;
         }
 
+        // Si l'index est en-dehors du tableau en-bas
         if (x - i - 1 < 0) {
             f1 = false;
             f3 = false;
@@ -157,22 +162,22 @@ bool checkVictory(vector<vector<char>> &board, int x, int y) {
 
         // Check diag \ up
         if (f3 && board[x + i][y - i] == board[x + i - 1][y - i - 1]) {
-            counter++;
+            counter2++;
         } else {
             f3 = false;
         }
 
         // Check diag \ down
         if (f4 && board[x - i][y + i] == board[x - i + 1][y + i + 1]) {
-            counter++;
+            counter2++;
         } else {
             f4 = false;
         }
 
-        if ((!f1 && !f2) || (!f3 && !f4))
+        if ((!f1 && !f2) && (!f3 && !f4))
             break;
 
-        if (counter >= 4) {
+        if (counter >= 4 || counter2 >= 4) {
             return true;
         }
     }

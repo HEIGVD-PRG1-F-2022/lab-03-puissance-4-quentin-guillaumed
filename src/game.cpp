@@ -167,28 +167,28 @@ bool checkDiagonals(vector<vector<char>> &board, int x, int y){
         }
 
         // Check diag / up
-        if (flagUpRight && board[x + i][y + i] == board[x + i - 1][y + i + 1]) {
+        if (flagUpRight && board[x - i][y + i] == board[x - i - 1][y + i + 1]) {
             counterUpDiag++;
         } else {
             flagUpRight = false;
         }
 
         // Check diag / down
-        if (flagDownLeft && board[x - i][y - i] == board[x - i + 1][y - i - 1]) {
+        if (flagDownLeft && board[x + i][y - i] == board[x + i + 1][y - i - 1]) {
             counterUpDiag++;
         } else {
             flagDownLeft = false;
         }
 
         // Check diag \ up
-        if (flagUpLeft && board[x + i][y - i] == board[x + i - 1][y - i - 1]) {
+        if (flagUpLeft && board[x - i][y - i] == board[x - i - 1][y - i - 1]) {
             counterDownDiag++;
         } else {
             flagUpLeft = false;
         }
 
         // Check diag \ down
-        if (flagDownRight && board[x - i][y + i] == board[x - i + 1][y + i + 1]) {
+        if (flagDownRight && board[x + i][y + i] == board[x + i + 1][y + i + 1]) {
             counterDownDiag++;
         } else {
             flagDownRight = false;

@@ -54,8 +54,7 @@ void displayGameRules() {
             "Chaque joueur dispose de 21 pions d'une couleur (par convention, en general jaune ou rouge).",
             "Tour a tour, les deux joueurs placent un pion dans la colonne de leur choix, le pion coulisse alors jusqu'a la position la plus basse possible dans la dite colonne a la suite de quoi c'est a l'adversaire de jouer.",
             "Le vainqueur est le joueur qui realise le premier un alignement (horizontal, vertical ou diagonal) consecutif d'au moins quatre pions de sa couleur.",
-            "Si, alors que toutes les cases de la grille de jeu sont remplies, aucun des deux joueurs n'a realise un tel alignement, la partie est declaree nulle. "
-    };
+            "Si, alors que toutes les cases de la grille de jeu sont remplies, aucun des deux joueurs n'a realise un tel alignement, la partie est declaree nulle. "};
 
     int cnt = 1;
     for (string rule: rules) {
@@ -66,13 +65,13 @@ void displayGameRules() {
 
 void startGame() {
 
-    //Wait for the user to start
+    // Wait for the user to start
     cout << "Appuyer sur <Enter> pour commencer une partie ";
     cin.ignore();
 
     bool currentPlayer = false;
 
-    //Clear the console and display the board
+    // Clear the console and display the board
     system("cls");
 
     vector<vector<char>> board(6, vector<char>(7, ' '));
@@ -103,8 +102,8 @@ void displayBoard(vector<vector<char>> &board) {
     const int boardWidth = (board.size() + 1) * 4 + 1;
 
     cout << endl;
-    for(int header = 0; header <= board.size(); header++){
-        cout  << setw(3) << setfill(' ') << header +1<< " ";
+    for (int header = 0; header <= board.size(); header++) {
+        cout << setw(3) << setfill(' ') << header + 1 << " ";
     }
 
     cout << endl;
@@ -118,7 +117,8 @@ void displayBoard(vector<vector<char>> &board) {
                 cout << "|";
             }
         }
-        cout << endl << setw(boardWidth) << setfill('-') << "" << endl;
+        cout << endl
+             << setw(boardWidth) << setfill('-') << "" << endl;
     }
 }
 
@@ -141,7 +141,8 @@ string getPlayerColorCoin(Player player) {
 int getPlayerInput(int maxInputValue, Player player) {
     int input;
     do {
-        cout << "Entrez un chiffre entre 1 et " << maxInputValue << getPlayerColorCoin(player) << endl << "> ";
+        cout << "Entrez un chiffre entre 1 et " << maxInputValue << getPlayerColorCoin(player) << endl
+             << "> ";
         cin >> input;
     } while (input > maxInputValue || input < 1);
     return input;
@@ -149,37 +150,39 @@ int getPlayerInput(int maxInputValue, Player player) {
 
 int getAvailableColSpace(vector<vector<char>> &board, int col) {
     for (int x = board.size() - 1; x >= 0; x--) {
-        if (board[x][col - 1] == ' ') return x;
+        if (board[x][col - 1] == ' ')
+            return x;
     }
     return -1;
 }
 
 bool checkVictory(vector<vector<char>> &board, int x, int y) {
-    //Check the column
+    // Check the column
     int counter = 1;
     for (int i = 0; i < 4; i++) {
-        //Si l'index est en-dehors du tableau
+        // Si l'index est en-dehors du tableau
         if (x + i + 1 >= board.size()) {
             break;
         }
 
         if (board[x + i][y] == board[x + i + 1][y]) {
             counter++;
+        } else {
+            break;
         }
 
         if (counter >= 4) {
             return true;
         }
-
     }
 
-    //Check the row
+    // Check the row
     counter = 1;
     // Exit flag to stop a side when there isn't a series of coin
     bool f1 = true, f2 = true;
 
     for (int i = 0; i < 4; i++) {
-        //Si l'index est en-dehors du tableau
+        // Si l'index est en-dehors du tableau
         if (x + i + 1 >= board[0].size() && x - i - 1 < 0) {
             break;
         }
@@ -191,14 +194,15 @@ bool checkVictory(vector<vector<char>> &board, int x, int y) {
             f1 = false;
         }
 
-        //Check left
+        // Check left
         if (board[x][y - i] == board[x][y - i - 1] && f2) {
             counter++;
         } else {
             f2 = false;
         }
 
-        if (!f1 && !f2) break;
+        if (!f1 && !f2)
+            break;
 
         if (counter >= 4) {
             return true;
@@ -211,40 +215,57 @@ bool checkVictory(vector<vector<char>> &board, int x, int y) {
     bool f3 = true, f4 = true;
 
     for (int i = 0; i < 4; i++) {
-        //Si l'index est en-dehors du tableau
-        if (y - i < 0) {
+        // Si l'index est en-dehors du tableau
+        if (y - i - 1 < 0) {
             f2 = false;
             f3 = false;
         }
+
+        if (y + i + 1 > board[i].size() - 1) {
+            f1 = false;
+            f4 = false;
+        }
+
+        if (x + i + 1 > board.size() - 1) {
+            f2 = false;
+            f4 = false;
+        }
+
+        if (x - i - 1 < 0) {
+            f1 = false;
+            f3 = false;
+        }
+
         // Check diag / up
-        if (board[x + i][y + i] == board[x + i + 1][y + i + 1] && f1) {
+        if (f1 && board[x + i][y + i] == board[x + i - 1][y + i + 1]) {
             counter++;
         } else {
             f1 = false;
         }
 
-        //Check diag / down
-        if (board[x - i][y - i] == board[x - i - 1][y - i - 1] && f2) {
+        // Check diag / down
+        if (f2 && board[x - i][y - i] == board[x - i + 1][y - i - 1]) {
             counter++;
         } else {
             f2 = false;
         }
 
         // Check diag \ up
-        if (board[x + i][y - i] == board[x + i + 1][y - i - 1] && f3) {
+        if (f3 && board[x + i][y - i] == board[x + i - 1][y - i - 1]) {
             counter++;
         } else {
             f3 = false;
         }
 
-        //Check diag \ down
-        if (board[x - i][y + i] == board[x - i - 1][y + i + 1] && f4) {
+        // Check diag \ down
+        if (f4 && board[x - i][y + i] == board[x - i + 1][y + i + 1]) {
             counter++;
         } else {
             f4 = false;
         }
 
-        if ((!f1 && !f2) || (!f3 && !f4)) break;
+        if ((!f1 && !f2) || (!f3 && !f4))
+            break;
 
         if (counter >= 4) {
             return true;

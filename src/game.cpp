@@ -76,21 +76,21 @@ bool checkHorizontal(vector<vector<char>> &board, int x, int y){
     // Exit flag to stop a side when there isn't a series of coin
     bool flagLeft = true, flagRight = true;
 
-    for (int i = 0; i < WIN_CONDITION; i++) {
+    for (int offset = 0; offset < WIN_CONDITION; offset++) {
         // if the index is outside the array
-        if (x + i + 1 >= BOARD_WIDTH && x - i - 1 < 0) {
+        if (x + offset + 1 >= BOARD_WIDTH && x - offset - 1 < 0) {
             break;
         }
 
         // Check the coin on the right
-        if (board[x][y + i] == board[x][y + i + 1] && flagRight) {
+        if (board[x][y + offset] == board[x][y + offset + 1] && flagRight) {
             counter++;
         } else {
             flagRight = false;
         }
 
         // Check the coin on the left
-        if (board[x][y - i] == board[x][y - i - 1] && flagLeft) {
+        if (board[x][y - offset] == board[x][y - offset - 1] && flagLeft) {
             counter++;
         } else {
             flagLeft = false;
@@ -111,14 +111,14 @@ bool checkHorizontal(vector<vector<char>> &board, int x, int y){
 
 bool checkVertical(vector<vector<char>> &board, int x, int y){
     int counter = 1;
-    for (int i = 0; i < WIN_CONDITION; i++) {
+    for (int offset = 0; offset < WIN_CONDITION; offset++) {
         // Si l'index est en-dehors du tableau
-        if (x + i + 1 >= BOARD_HEIGHT) {
+        if (x + offset + 1 >= BOARD_HEIGHT) {
             break;
         }
 
         // Check the coin bellow
-        if (board[x + i][y] == board[x + i + 1][y]) {
+        if (board[x + offset][y] == board[x + offset + 1][y]) {
             counter++;
         } else {
             break;
@@ -141,54 +141,54 @@ bool checkDiagonals(vector<vector<char>> &board, int x, int y){
     // Exit flag to stop a side when there isn't a series of coin
     bool flagUpLeft = true, flagDownLeft = true, flagUpRight = true, flagDownRight = true;
 
-    for (int i = 0; i < WIN_CONDITION; i++) {
+    for (int offset = 0; offset < WIN_CONDITION; offset++) {
         // If the index is outside the array on the left
-        if (y - i - 1 < 0) {
+        if (y - offset - 1 < 0) {
             flagUpLeft = false;
             flagDownLeft = false;
         }
 
         // If the index is outside the array on the right
-        if (y + i + 1 > BOARD_WIDTH - 1) {
+        if (y + offset + 1 > BOARD_WIDTH - 1) {
             flagUpRight = false;
             flagDownRight = false;
         }
 
         // If the index is outside the array on the bottom
-        if (x + i + 1 > BOARD_HEIGHT - 1) {
+        if (x + offset + 1 > BOARD_HEIGHT - 1) {
             flagDownLeft = false;
             flagDownRight = false;
         }
 
         // If the index is outside the array on the top
-        if (x - i - 1 < 0) {
+        if (x - offset - 1 < 0) {
             flagUpLeft = false;
             flagUpRight = false;
         }
 
         // Check diag / up
-        if (flagUpRight && board[x - i][y + i] == board[x - i - 1][y + i + 1]) {
+        if (flagUpRight && board[x - offset][y + offset] == board[x - offset - 1][y + offset + 1]) {
             counterUpDiag++;
         } else {
             flagUpRight = false;
         }
 
         // Check diag / down
-        if (flagDownLeft && board[x + i][y - i] == board[x + i + 1][y - i - 1]) {
+        if (flagDownLeft && board[x + offset][y - offset] == board[x + offset + 1][y - offset - 1]) {
             counterUpDiag++;
         } else {
             flagDownLeft = false;
         }
 
         // Check diag \ up
-        if (flagUpLeft && board[x - i][y - i] == board[x - i - 1][y - i - 1]) {
+        if (flagUpLeft && board[x - offset][y - offset] == board[x - offset - 1][y - offset - 1]) {
             counterDownDiag++;
         } else {
             flagUpLeft = false;
         }
 
         // Check diag \ down
-        if (flagDownRight && board[x + i][y + i] == board[x + i + 1][y + i + 1]) {
+        if (flagDownRight && board[x + offset][y + offset] == board[x + offset + 1][y + offset + 1]) {
             counterDownDiag++;
         } else {
             flagDownRight = false;

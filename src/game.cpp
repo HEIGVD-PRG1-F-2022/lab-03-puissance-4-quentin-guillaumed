@@ -27,7 +27,7 @@ void startGame() {
     cout << "Appuyer sur <Enter> pour commencer une partie ";
     cin.ignore();
 
-    bool currentPlayer = false;
+    bool currentPlayerFlag = false;
 
     // Clear the console and display the board
     system("cls");
@@ -36,8 +36,10 @@ void startGame() {
     int col;
     int availableCase = -1;
 
+    Player player;
+
     do {
-        Player player = currentPlayer ? Player::RED : Player::YELLOW;
+        player = currentPlayerFlag ? Player::RED : Player::YELLOW;
         displayGameBoard(board);
 
         do {
@@ -47,7 +49,7 @@ void startGame() {
 
         board[availableCase][col - 1] = (int) player;
 
-        currentPlayer = !currentPlayer;
+        currentPlayerFlag = !currentPlayerFlag;
     } while (!checkVictory(board, availableCase, col - 1));
 
     displayGameBoard(board);

@@ -102,6 +102,13 @@ void displayBoard(vector<vector<char>> &board) {
 
     const int boardWidth = (board.size() + 1) * 4 + 1;
 
+    cout << endl;
+    for(int header = 0; header <= board.size(); header++){
+        cout  << setw(3) << setfill(' ') << header +1<< " ";
+    }
+
+    cout << endl;
+
     cout << setw(boardWidth) << setfill('-') << "" << endl;
     for (int row = 0; row < board.size(); row++) {
         for (int col = 0; col < board[row].size(); col++) {

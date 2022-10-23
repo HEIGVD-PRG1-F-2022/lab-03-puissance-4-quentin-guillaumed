@@ -15,6 +15,7 @@ Compilateur     : Mingw-w64 g++ 11.2.0
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include "../include/display.h"
 
 using namespace std;
 
@@ -24,8 +25,6 @@ enum class Player {
 };
 
 string getPlayerColorCoin(Player player);
-
-void displayGameRules();
 
 void startGame();
 
@@ -43,24 +42,6 @@ int main() {
     startGame();
 
     return EXIT_SUCCESS;
-}
-
-/**
- * Display the rules of the game (https://fr.wikipedia.org/wiki/Puissance_4)
- */
-void displayGameRules() {
-    string rules[] = {
-            "Le but du jeu est d'aligner une suite de 4 pions de meme couleur sur une grille comptant 6 rangees et 7 colonnes.",
-            "Chaque joueur dispose de 21 pions d'une couleur (par convention, en general jaune ou rouge).",
-            "Tour a tour, les deux joueurs placent un pion dans la colonne de leur choix, le pion coulisse alors jusqu'a la position la plus basse possible dans la dite colonne a la suite de quoi c'est a l'adversaire de jouer.",
-            "Le vainqueur est le joueur qui realise le premier un alignement (horizontal, vertical ou diagonal) consecutif d'au moins quatre pions de sa couleur.",
-            "Si, alors que toutes les cases de la grille de jeu sont remplies, aucun des deux joueurs n'a realise un tel alignement, la partie est declaree nulle. "};
-
-    int cnt = 1;
-    for (string rule: rules) {
-        cout << "Regle " << cnt << ": " << rule << endl;
-        cnt++;
-    }
 }
 
 void startGame() {

@@ -32,7 +32,7 @@ void startGame() {
     // Clear the console and display the board
     system("cls");
 
-    vector<vector<char>> board(6, vector<char>(7, ' '));
+    vector<vector<char>> board(BOARD_HEIGHT, vector<char>(BOARD_WIDTH, ' '));
     int col;
     int availableCase = -1;
 
@@ -43,7 +43,7 @@ void startGame() {
         displayGameBoard(board);
 
         do {
-            col = getPlayerInput(board[0].size(), player);
+            col = getPlayerInput(BOARD_WIDTH, player);
             availableCase = availableColSpace(board, col);
         } while (availableCase == -1);
 
@@ -58,7 +58,7 @@ void startGame() {
 }
 
 int availableColSpace(vector<vector<char>> &gameBoard, int col) {
-    for (int x = gameBoard.size() - 1; x >= 0; x--) {
+    for (int x = BOARD_HEIGHT - 1; x >= 0; x--) {
         if (gameBoard[x][col - 1] == ' ')
             return x;
     }
@@ -66,122 +66,140 @@ int availableColSpace(vector<vector<char>> &gameBoard, int col) {
 }
 
 bool checkVictory(vector<vector<char>> &board, int x, int y) {
-    /** Check the column**/
+    return (checkVertical(board,x,y) || checkHorizontal(board, x,y) || checkDiagonals(board,x,y));
+}
+
+bool checkHorizontal(vector<vector<char>> &board, int x, int y){
+
     int counter = 1;
-    for (int i = 0; i < 4; i++) {
-        // Si l'index est en-dehors du tableau
-        if (x + i + 1 >= board.size()) {
+
+    // Exit flag to stop a side when there isn't a series of coin
+    bool flagLeft = true, flagRight = true;
+
+    for (int i = 0; i < WIN_CONDITION; i++) {
+        // if the index is outside the array
+        if (x + i + 1 >= BOARD_WIDTH && x - i - 1 < 0) {
             break;
         }
 
+        // Check the coin on the right
+        if (board[x][y + i] == board[x][y + i + 1] && flagRight) {
+            counter++;
+        } else {
+            flagRight = false;
+        }
+
+        // Check the coin on the left
+        if (board[x][y - i] == board[x][y - i - 1] && flagLeft) {
+            counter++;
+        } else {
+            flagLeft = false;
+        }
+
+        //Stop the check if both flags are false
+        if (!flagRight && !flagLeft)
+            break;
+
+        //Check the win condition
+        if (counter >= WIN_CONDITION) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool checkVertical(vector<vector<char>> &board, int x, int y){
+    int counter = 1;
+    for (int i = 0; i < WIN_CONDITION; i++) {
+        // Si l'index est en-dehors du tableau
+        if (x + i + 1 >= BOARD_HEIGHT) {
+            break;
+        }
+
+        // Check the coin bellow
         if (board[x + i][y] == board[x + i + 1][y]) {
             counter++;
         } else {
             break;
         }
 
-        if (counter >= 4) {
+        //Check the win condition
+        if (counter >= WIN_CONDITION) {
             return true;
         }
     }
 
-    /** Check the rows **/
-    counter = 1;
+    return false;
+}
+
+bool checkDiagonals(vector<vector<char>> &board, int x, int y){
+
+    //The down diag is \ and the up diag is /
+    int counterUpDiag = 1, counterDownDiag = 1;
+
     // Exit flag to stop a side when there isn't a series of coin
-    bool f1 = true, f2 = true;
+    bool flagUpLeft = true, flagDownLeft = true, flagUpRight = true, flagDownRight = true;
 
-    for (int i = 0; i < 4; i++) {
-        // Si l'index est en-dehors du tableau
-        if (x + i + 1 >= board[0].size() && x - i - 1 < 0) {
-            break;
-        }
-
-        // Check right
-        if (board[x][y + i] == board[x][y + i + 1] && f1) {
-            counter++;
-        } else {
-            f1 = false;
-        }
-
-        // Check left
-        if (board[x][y - i] == board[x][y - i - 1] && f2) {
-            counter++;
-        } else {
-            f2 = false;
-        }
-
-        if (!f1 && !f2)
-            break;
-
-        if (counter >= 4) {
-            return true;
-        }
-    }
-
-    /** Check the diag / and \ **/
-    counter = 1;
-    int counter2 = 1;
-
-    f1 = true, f2 = true;
-    bool f3 = true, f4 = true;
-
-    for (int i = 0; i < 4; i++) {
-        // Si l'index est en-dehors du tableau à gauche
+    for (int i = 0; i < WIN_CONDITION; i++) {
+        // If the index is outside the array on the left
         if (y - i - 1 < 0) {
-            f2 = false;
-            f3 = false;
+            flagUpLeft = false;
+            flagDownLeft = false;
         }
 
-        // Si l'index est en-dehors du tableau à droite
-        if (y + i + 1 > board[i].size() - 1) {
-            f1 = false;
-            f4 = false;
+        // If the index is outside the array on the right
+        if (y + i + 1 > BOARD_WIDTH - 1) {
+            flagUpRight = false;
+            flagDownRight = false;
         }
 
-        // Si l'index est en-dehors du tableau en-haut
-        if (x + i + 1 > board.size() - 1) {
-            f2 = false;
-            f4 = false;
+        // If the index is outside the array on the bottom
+        if (x + i + 1 > BOARD_HEIGHT - 1) {
+            flagDownLeft = false;
+            flagDownRight = false;
         }
 
-        // Si l'index est en-dehors du tableau en-bas
+        // If the index is outside the array on the top
         if (x - i - 1 < 0) {
-            f1 = false;
-            f3 = false;
+            flagUpLeft = false;
+            flagUpRight = false;
         }
 
         // Check diag / up
-        if (f1 && board[x + i][y + i] == board[x + i - 1][y + i + 1]) {
-            counter++;
+        if (flagUpRight && board[x + i][y + i] == board[x + i - 1][y + i + 1]) {
+            counterUpDiag++;
         } else {
-            f1 = false;
+            flagUpRight = false;
         }
 
         // Check diag / down
-        if (f2 && board[x - i][y - i] == board[x - i + 1][y - i - 1]) {
-            counter++;
+        if (flagDownLeft && board[x - i][y - i] == board[x - i + 1][y - i - 1]) {
+            counterUpDiag++;
         } else {
-            f2 = false;
+            flagDownLeft = false;
         }
 
         // Check diag \ up
-        if (f3 && board[x + i][y - i] == board[x + i - 1][y - i - 1]) {
-            counter2++;
+        if (flagUpLeft && board[x + i][y - i] == board[x + i - 1][y - i - 1]) {
+            counterDownDiag++;
         } else {
-            f3 = false;
+            flagUpLeft = false;
         }
 
         // Check diag \ down
-        if (f4 && board[x - i][y + i] == board[x - i + 1][y + i + 1]) {
-            counter2++;
+        if (flagDownRight && board[x - i][y + i] == board[x - i + 1][y + i + 1]) {
+            counterDownDiag++;
         } else {
-            f4 = false;
+            flagDownRight = false;
         }
 
-        if ((!f1 && !f2) && (!f3 && !f4))
+        //If all the flags are false
+        if (!flagDownRight && !flagUpLeft && !flagDownLeft && !flagUpRight)
             break;
 
-        if (counter >= 4 || counter2 >= 4) {
+        //If one of the diag fulfill the win condition
+        if (counterUpDiag >= WIN_CONDITION || counterDownDiag >= WIN_CONDITION) {
             return true;
         }
     }

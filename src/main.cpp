@@ -13,24 +13,13 @@ Compilateur     : Mingw-w64 g++ 11.2.0
 */
 
 #include <iostream>
-#include <iomanip>
 #include <vector>
 #include "../include/display.h"
+#include "../include/player.h"
 
 using namespace std;
 
-enum class Player {
-    YELLOW,
-    RED,
-};
-
-string getPlayerColorCoin(Player player);
-
 void startGame();
-
-void displayBoard(vector<vector<char>> &);
-
-int getPlayerInput(int, Player);
 
 int getAvailableColSpace(vector<vector<char>> &, int);
 
@@ -61,7 +50,7 @@ void startGame() {
 
     do {
         Player player = currentPlayer ? Player::RED : Player::YELLOW;
-        displayBoard(board);
+        displayGameBoard(board);
 
         do {
             col = getPlayerInput(board[0].size(), player);
@@ -74,60 +63,6 @@ void startGame() {
     } while (!checkVictory(board, availableCase, col - 1));
 }
 
-/**
- *
- * @param board
- */
-void displayBoard(vector<vector<char>> &board) {
-
-    const int boardWidth = (board.size() + 1) * 4 + 1;
-
-    cout << endl;
-    for (int header = 0; header <= board.size(); header++) {
-        cout << setw(3) << setfill(' ') << header + 1 << " ";
-    }
-
-    cout << endl;
-
-    cout << setw(boardWidth) << setfill('-') << "" << endl;
-    for (int row = 0; row < board.size(); row++) {
-        for (int col = 0; col < board[row].size(); col++) {
-            cout << "|" << setw(3) << setfill(' ') << getPlayerColorCoin((Player) board[row][col]);
-
-            if (col == (board[row].size() - 1)) {
-                cout << "|";
-            }
-        }
-        cout << endl
-             << setw(boardWidth) << setfill('-') << "" << endl;
-    }
-}
-
-string getPlayerColorCoin(Player player) {
-    string playerCoin;
-    switch (player) {
-        case Player::YELLOW:
-            playerCoin = "\x1b[93m * \x1b[0m";
-            break;
-        case Player::RED:
-            playerCoin = "\x1b[91m * \x1b[0m";
-            break;
-        default:
-            playerCoin = " ";
-            break;
-    }
-    return playerCoin;
-}
-
-int getPlayerInput(int maxInputValue, Player player) {
-    int input;
-    do {
-        cout << "Entrez un chiffre entre 1 et " << maxInputValue << getPlayerColorCoin(player) << endl
-             << "> ";
-        cin >> input;
-    } while (input > maxInputValue || input < 1);
-    return input;
-}
 
 int getAvailableColSpace(vector<vector<char>> &board, int col) {
     for (int x = board.size() - 1; x >= 0; x--) {
